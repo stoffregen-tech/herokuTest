@@ -1,0 +1,38 @@
+version: '3'
+services:
+  web:
+    image: httpd:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./apache/src:/usr/local/apache2/htdocs/
+    depends_on:
+      - db
+      - flask
+
+  db:
+    image: postgres:latest
+    ports:
+      - "8889:3306"
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: aytjdfviuran9ce9829
+    
+  flask:
+    build: ./flask/
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./flask/:/usr/src/app
+    depends_on:
+      - db
+
+  nginxgateway:
+    build: ./nginx/
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - db
+      - flask

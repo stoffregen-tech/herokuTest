@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test</title>
+</head>
+<body>
+
+<script type="text/javascript">
+	
+async function fetchFileAPI(route,useDataFunction) {
+	try {
+		await fetch("http://localhost/json/" + route)
+		.then(res => {
+			if(res.ok) {
+				return res.json();
+			} else {
+				return Promise.reject(res.status);
+			}
+		}).then(data => useDataFunction(data)
+		).catch(err => {
+			console.log('Error: ', err);
+		});
+
+	} catch(e) {
+		console.error(e.message);
+	}
+
+	return 1;
+
+}
+
+
+fetchFileAPI("test", function(data) {
+	document.getElementsByTagName("body")[0].innerHTML = "<h1>" + data[0] + "</h1>";
+});
+</script>
+
+</body>
+</html>
